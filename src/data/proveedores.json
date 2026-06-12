@@ -1,0 +1,34 @@
+[
+  {
+    "id": "prov-001",
+    "nombre": "Limpio S.A.",
+    "contacto": "Carlos Ruiz",
+    "telefono": "264-555-0192",
+    "cuit": "",
+    "activo": true
+  },
+  {
+    "id": "prov-002",
+    "nombre": "Distribuidora Sur",
+    "contacto": "Ana Torres",
+    "telefono": "264-555-0844",
+    "cuit": "",
+    "activo": true
+  },
+  {
+    "id": "prov-003",
+    "nombre": "LogiSupply S.R.L.",
+    "contacto": "Juan Pérez",
+    "telefono": "011-4444-5555",
+    "cuit": "20123456789",
+    "activo": true
+  },
+  {
+    "id": "prov-004",
+    "nombre": "AgroInsumos Mexico",
+    "contacto": "María Gómez Bolaños",
+    "telefono": "264-555-1234",
+    "cuit": "30-934887766-8",
+    "activo": true
+  }
+]

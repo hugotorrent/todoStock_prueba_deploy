@@ -1,0 +1,64 @@
+{
+  "info": {
+    "name": "TodoStock S.A. — Segunda Entrega",
+    "description": "Colección migrada para Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Proveedores",
+      "item": [
+        { "name": "Listar proveedores", "request": { "method": "GET", "url": "http://localhost:3000/api/proveedores" } },
+        { "name": "Crear proveedor", "request": { "method": "POST", "url": "http://localhost:3000/api/proveedores", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"razonSocial\": \"Distribuidora Norte S.R.L.\",\n  \"cuit\": \"30-44556677-8\",\n  \"telefono\": \"11-5555-9999\",\n  \"email\": \"ventas@norte.com\"\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Crear proveedor — CUIT duplicado", "request": { "method": "POST", "url": "http://localhost:3000/api/proveedores", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"razonSocial\": \"Otro\",\n  \"cuit\": \"30-12345678-9\"\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Obtener proveedor por id", "request": { "method": "GET", "url": "http://localhost:3000/api/proveedores/REEMPLAZAR_CON_ID" } },
+        { "name": "Actualizar proveedor", "request": { "method": "PUT", "url": "http://localhost:3000/api/proveedores/REEMPLAZAR_CON_ID", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"telefono\": \"11-9999-0000\"\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Desactivar proveedor", "request": { "method": "DELETE", "url": "http://localhost:3000/api/proveedores/REEMPLAZAR_CON_ID" } },
+        { "name": "Id inválido — espera 400", "request": { "method": "GET", "url": "http://localhost:3000/api/proveedores/id-invalido-123" } }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        { "name": "Listar productos con alertas", "request": { "method": "GET", "url": "http://localhost:3000/api/productos" } },
+        { "name": "Crear producto — OK", "request": { "method": "POST", "url": "http://localhost:3000/api/productos", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"nombre\": \"Limpiador vidrios 500ml\",\n  \"descripcion\": \"Limpiador con atomizador\",\n  \"precio\": 650,\n  \"stock\": 45,\n  \"stockMinimo\": 15,\n  \"proveedorId\": \"REEMPLAZAR_CON_ID_PROVEEDOR\"\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Crear producto — proveedor inexistente", "request": { "method": "POST", "url": "http://localhost:3000/api/productos", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"nombre\": \"Test\",\n  \"precio\": 100,\n  \"proveedorId\": \"000000000000000000000000\"\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Actualizar stock — activa alerta", "request": { "method": "PUT", "url": "http://localhost:3000/api/productos/REEMPLAZAR_CON_ID", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"stock\": 5\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Desactivar producto", "request": { "method": "DELETE", "url": "http://localhost:3000/api/productos/REEMPLAZAR_CON_ID" } }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        { "name": "Listar clientes", "request": { "method": "GET", "url": "http://localhost:3000/api/clientes" } },
+        { "name": "Crear cliente", "request": { "method": "POST", "url": "http://localhost:3000/api/clientes", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"razonSocial\": \"Kiosco Los Pinos\",\n  \"cuit\": \"23-44445555-9\",\n  \"condicionIva\": \"monotributista\",\n  \"telefono\": \"11-7777-8888\",\n  \"limiteCrediticio\": 20000\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Consultar crédito disponible", "request": { "method": "GET", "url": "http://localhost:3000/api/clientes/REEMPLAZAR_CON_ID/credito?monto=5000" } },
+        { "name": "Consultar crédito — insuficiente (Limpieza Express)", "request": { "method": "GET", "url": "http://localhost:3000/api/clientes/REEMPLAZAR_CON_ID_CLI2/credito?monto=5000" } },
+        { "name": "Registrar pago", "request": { "method": "POST", "url": "http://localhost:3000/api/clientes/REEMPLAZAR_CON_ID/pagos", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"monto\": 5000\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Desactivar cliente con deuda — espera 409", "request": { "method": "DELETE", "url": "http://localhost:3000/api/clientes/REEMPLAZAR_CON_ID_CLI2" } }
+      ]
+    },
+    {
+      "name": "Ventas",
+      "item": [
+        { "name": "Listar ventas", "request": { "method": "GET", "url": "http://localhost:3000/api/ventas" } },
+        { "name": "Crear venta — contado OK", "request": { "method": "POST", "url": "http://localhost:3000/api/ventas", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"clienteId\": \"REEMPLAZAR_CON_ID_CLIENTE\",\n  \"modalidad\": \"contado\",\n  \"items\": [\n    {\"productoId\": \"REEMPLAZAR_CON_ID_PRODUCTO\", \"cantidad\": 5}\n  ]\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Crear venta — cuenta corriente OK", "request": { "method": "POST", "url": "http://localhost:3000/api/ventas", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"clienteId\": \"REEMPLAZAR_CON_ID_CLI3\",\n  \"modalidad\": \"cuenta_corriente\",\n  \"items\": [\n    {\"productoId\": \"REEMPLAZAR_CON_ID_PRODUCTO\", \"cantidad\": 2}\n  ]\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Crear venta — crédito insuficiente", "request": { "method": "POST", "url": "http://localhost:3000/api/ventas", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"clienteId\": \"REEMPLAZAR_CON_ID_CLI2\",\n  \"modalidad\": \"cuenta_corriente\",\n  \"items\": [\n    {\"productoId\": \"REEMPLAZAR_CON_ID_PRODUCTO\", \"cantidad\": 10}\n  ]\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Crear venta — stock insuficiente", "request": { "method": "POST", "url": "http://localhost:3000/api/ventas", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"clienteId\": \"REEMPLAZAR_CON_ID_CLIENTE\",\n  \"modalidad\": \"contado\",\n  \"items\": [\n    {\"productoId\": \"REEMPLAZAR_CON_ID_PRODUCTO\", \"cantidad\": 9999}\n  ]\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Obtener venta por id", "request": { "method": "GET", "url": "http://localhost:3000/api/ventas/REEMPLAZAR_CON_ID_VENTA" } },
+        { "name": "Cancelar venta", "request": { "method": "DELETE", "url": "http://localhost:3000/api/ventas/REEMPLAZAR_CON_ID_VENTA" } },
+        { "name": "Cancelar venta ya cancelada — espera 409", "request": { "method": "DELETE", "url": "http://localhost:3000/api/ventas/REEMPLAZAR_CON_ID_VENTA" } }
+      ]
+    },
+    {
+      "name": "Resumen y Auditoría",
+      "item": [
+        { "name": "Dashboard resumen", "request": { "method": "GET", "url": "http://localhost:3000/api/resumen" } },
+        { "name": "Log de auditoría", "request": { "method": "GET", "url": "http://localhost:3000/api/auditoria" } },
+        { "name": "JSON malformado — espera 400", "request": { "method": "POST", "url": "http://localhost:3000/api/proveedores", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"razonSocial\": \"Test\",,\n}", "options": {"raw": {"language": "json"}}} } },
+        { "name": "Ruta inexistente — espera 404", "request": { "method": "GET", "url": "http://localhost:3000/api/inexistente" } }
+      ]
+    }
+  ]
+}

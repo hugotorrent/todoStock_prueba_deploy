@@ -1,0 +1,41 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    title Proveedores - TodoStock S.A.
+    style.
+      body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+      .contenedor { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+      h1 { color: #333; text-align: center; }
+      table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+      th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+      th { background-color: #28a745; color: white; }
+      .btn-volver { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #28a745; font-weight: bold; }
+      .estado-activo { color: green; font-weight: bold; }
+      .estado-inactivo { color: gray; }
+  
+  body
+    div.contenedor
+      a.btn-volver(href="/") ← Volver al Menú Principal
+      h1 Directorio de Proveedores
+      
+      table
+        thead
+          tr
+            th ID
+            th Nombre
+            th Contacto
+            th Teléfono
+            th Estado
+        tbody
+          each proveedor in proveedores
+            tr
+              td= proveedor.id
+              td= proveedor.nombre
+              td= proveedor.contacto
+              td= proveedor.telefono
+              td
+                if proveedor.activo
+                  span.estado-activo Activo
+                else
+                  span.estado-inactivo Inactivo

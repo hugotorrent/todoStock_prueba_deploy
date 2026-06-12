@@ -1,0 +1,147 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    title TodoStock S.A. - Resumen
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fb;
+        margin: 0;
+        padding: 30px 20px;
+      }
+      .contenedor {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .header-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      h1 { margin: 0; color: #1f2937; }
+      .subtitulo { color: #4b5563; margin: 8px 0 24px; }
+      .boton-accion {
+        display: inline-block;
+        padding: 10px 18px;
+        color: #1f2937;
+        border: 1px solid #d1d5db;
+        background: #ffffff;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .boton-accion:hover { background: #f3f4f6; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+      .card {
+        padding: 20px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+      }
+      .card h2 { margin: 0 0 8px; font-size: 1rem; color: #111827; }
+      .card p { margin: 4px 0; color: #374151; }
+      .card strong { color: #111827; }
+      .seccion {
+        margin-bottom: 24px;
+      }
+      .seccion h3 { margin-bottom: 12px; color: #111827; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      th { background: #f3f4f6; color: #111827; }
+      .alerta-item {
+        margin-bottom: 10px;
+        padding: 14px;
+        border-radius: 10px;
+        background: #fff7ed;
+        border: 1px solid #fcd9b6;
+      }
+      .alerta-item strong { display: inline-block; margin-bottom: 6px; }
+      .alerta-item span { display: inline-block; margin-left: 8px; color: #92400e; }
+      .sin-alertas { color: #4b5563; font-style: italic; }
+  body
+    div.contenedor
+      div.header-panel
+        div
+          h1 Dashboard de Resumen
+          p.subtitulo Información consolidada de stock, clientes, proveedores y ventas
+        div
+          a.boton-accion(href="/") Volver al menú
+          a.boton-accion(href="/logout") Salir
+
+      div.grid
+        div.card
+          h2 Proveedores
+          p Total: #{resumen.proveedores.total}
+          p Activos: #{resumen.proveedores.activos}
+          p Inactivos: #{resumen.proveedores.inactivos}
+        div.card
+          h2 Productos
+          p Total: #{resumen.productos.total}
+          p Activos: #{resumen.productos.activos}
+          p Sin stock: #{resumen.productos.sinStock}
+          p Stock mínimo: #{resumen.productos.enStockMinimo}
+        div.card
+          h2 Clientes
+          p Total: #{resumen.clientes.total}
+          p Activos: #{resumen.clientes.activos}
+          p Deuda total: $#{resumen.clientes.deudaTotalCartera}
+
+      div.grid
+        div.card
+          h2 Ventas
+          p Total ventas: #{resumen.ventas.total}
+          p Confirmadas: #{resumen.ventas.confirmadas}
+          p Canceladas: #{resumen.ventas.canceladas}
+          p Hoy: #{resumen.ventas.hoy}
+        div.card
+          h2 Montos
+          p Total facturado: $#{resumen.ventas.totalVentas}
+          p Facturado hoy: $#{resumen.ventas.totalHoy}
+          p Generado en: #{resumen.generadoEn}
+        div.card
+          h2 Alertas
+          p Total: #{resumen.alertas.total}
+          if resumen.alertas.total === 0
+            p.sin-alertas Sin alertas activas
+          else
+            each alerta in resumen.alertas.items
+              div.alerta-item
+                strong #{alerta.urgencia}
+                span #{alerta.tipo}
+                p #{alerta.mensaje}
+
+      div.seccion
+        h3 Detalle de alertas
+        if resumen.alertas.total > 0
+          table
+            thead
+              tr
+                th Tipo
+                th Urgencia
+                th Mensaje
+            tbody
+              each alerta in resumen.alertas.items
+                tr
+                  td #{alerta.tipo}
+                  td #{alerta.urgencia}
+                  td #{alerta.mensaje}
+        else
+          p.sin-alertas No hay alertas pendientes.

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cli-001",
+    "razonSocial": "Supermercados El Sol",
+    "cuit": "30-12345678-9",
+    "modalidad": "contado",
+    "activo": true
+  },
+  {
+    "id": "cli-002",
+    "razonSocial": "Minimarket Los Andes",
+    "cuit": "20-87654321-1",
+    "modalidad": "cuenta_corriente",
+    "activo": true
+  }
+]

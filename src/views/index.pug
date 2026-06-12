@@ -1,0 +1,95 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    title TodoStock S.A. - Inicio
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 40px 20px;
+      }
+      .contenedor {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .header-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      h1 { color: #333; font-size: 2em; margin: 0; }
+      .btn-logout {
+        font-size: 0.8em;
+        color: #999;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        padding: 5px 12px;
+        border-radius: 5px;
+        transition: background 0.2s;
+      }
+      .btn-logout:hover { background: #f5f5f5; color: #333; }
+      .subtitulo { color: #666; margin-top: 0; margin-bottom: 30px; font-size: 1.1em; }
+      .menu-principal {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 40px;
+      }
+      .boton {
+        padding: 15px;
+        font-size: 1.1em;
+        text-decoration: none;
+        color: black;
+        border-radius: 6px;
+        border: 1px solid #2f2e2e;
+        font-weight: bold;
+        background-color: #ffffff;
+        transition: background-color 0.2s;
+      }
+      .boton:hover { background-color: #1a252f15; }
+      .seccion-api {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: left;
+        border: 1px solid #e9ecef;
+      }
+      .seccion-api h3 { margin-top: 0; color: #444; font-size: 1.1em; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+      .api-lista { margin: 0; padding-left: 20px; line-height: 1.8; }
+      .api-lista a { color: #03115f; text-decoration: none; font-family: monospace; font-size: 1.1em; }
+      .api-lista a:hover { text-decoration: underline; }
+
+  body
+    div.contenedor
+      div.header-panel
+        h1 TodoStock S.A.
+        a.btn-logout(href="/logout") Cerrar sesión
+
+      p.subtitulo Panel de Administración
+
+      div.menu-principal
+        a.boton(href="/productos") Gestión de Productos
+        a.boton(href="/proveedores") Gestión de Proveedores
+        a.boton(href="/clientes") Gestión de Clientes
+        a.boton(href="/ventas") Registro de Ventas
+        a.boton(href="/resumen") Dashboard de Resumen
+
+      div.seccion-api
+        h3 API JSON
+        ul.api-lista
+          li: a(href="/api/productos") /api/productos
+          li: a(href="/api/proveedores") /api/proveedores
+          li: a(href="/api/clientes") /api/clientes
+          li: a(href="/api/ventas") /api/ventas
+          li: a(href="/api/resumen") /api/resumen
+
+      footer(style="margin-top: 25px; font-size: 0.85em; color: #000210;")
+        p © DHL Solutions — Grupo N°9

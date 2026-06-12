@@ -1,0 +1,16 @@
+[
+  {
+    "id": "vta-001",
+    "fecha": "2026-04-21T19:04:24.984Z",
+    "clienteId": "cli-002",
+    "razonSocial": "Minimarket Los Andes",
+    "items": [
+      {
+        "productoId": 1,
+        "cantidad": 5,
+        "precioUnitario": 1100
+      }
+    ],
+    "total": 5500
+  }
+]

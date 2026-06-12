@@ -1,0 +1,107 @@
+[
+  {
+    "fecha": "2026-05-23T00:02:15.213Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 201,
+    "duracion": "382ms"
+  },
+  {
+    "fecha": "2026-05-23T00:02:43.498Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 201,
+    "duracion": "93ms"
+  },
+  {
+    "fecha": "2026-05-23T00:09:12.584Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 422,
+    "duracion": "68ms"
+  },
+  {
+    "fecha": "2026-05-23T11:34:29.886Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 200,
+    "duracion": "54ms"
+  },
+  {
+    "fecha": "2026-05-23T11:34:38.003Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "49ms"
+  },
+  {
+    "fecha": "2026-05-23T11:34:39.905Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "21ms"
+  },
+  {
+    "fecha": "2026-05-23T11:35:04.137Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "20ms"
+  },
+  {
+    "fecha": "2026-05-23T11:38:02.063Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "15ms"
+  },
+  {
+    "fecha": "2026-05-23T12:18:45.956Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 422,
+    "duracion": "111ms"
+  },
+  {
+    "fecha": "2026-05-23T12:19:27.291Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 422,
+    "duracion": "65ms"
+  },
+  {
+    "fecha": "2026-05-23T12:19:58.892Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 422,
+    "duracion": "62ms"
+  },
+  {
+    "fecha": "2026-05-23T12:23:30.294Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 422,
+    "duracion": "46ms"
+  },
+  {
+    "fecha": "2026-05-23T12:26:22.576Z",
+    "metodo": "POST",
+    "ruta": "/api/ventas",
+    "status": 201,
+    "duracion": "94ms"
+  },
+  {
+    "fecha": "2026-05-23T13:15:32.428Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "42ms"
+  },
+  {
+    "fecha": "2026-06-10T16:19:31.470Z",
+    "metodo": "POST",
+    "ruta": "/login",
+    "status": 302,
+    "duracion": "14ms"
+  }
+]

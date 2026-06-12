@@ -1,0 +1,33 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    title Clientes - TodoStock S.A.
+    style.
+      body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+      .contenedor { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+      h1 { color: #333; text-align: center; }
+      table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+      th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+      th { background-color: #17a2b8; color: white; }
+      .btn-volver { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #17a2b8; font-weight: bold; }
+  
+  body
+    div.contenedor
+      a.btn-volver(href="/") ← Volver al Menú Principal
+      h1 Base de Clientes
+      
+      table
+        thead
+          tr
+            th ID
+            th Razón Social
+            th CUIT
+            th Condición de IVA
+        tbody
+          each cliente in clientes
+            tr
+              td= cliente.id
+              td= cliente.razonSocial
+              td= cliente.cuit
+              td= cliente.condicionIva ? cliente.condicionIva.replace('_', ' ') : ''
