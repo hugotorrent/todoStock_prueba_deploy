@@ -2,146 +2,59 @@ doctype html
 html(lang="es")
   head
     meta(charset="UTF-8")
-    title TodoStock S.A. - Resumen
+    title TodoStock — Dashboard
     style.
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f7fb;
-        margin: 0;
-        padding: 30px 20px;
-      }
-      .contenedor {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-      .header-panel {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-      }
-      h1 { margin: 0; color: #1f2937; }
-      .subtitulo { color: #4b5563; margin: 8px 0 24px; }
-      .boton-accion {
-        display: inline-block;
-        padding: 10px 18px;
-        color: #1f2937;
-        border: 1px solid #d1d5db;
-        background: #ffffff;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: background 0.2s;
-      }
-      .boton-accion:hover { background: #f3f4f6; }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-        margin-bottom: 24px;
-      }
-      .card {
-        padding: 20px;
-        border-radius: 14px;
-        background: #f8fafc;
-        border: 1px solid #e5e7eb;
-      }
-      .card h2 { margin: 0 0 8px; font-size: 1rem; color: #111827; }
-      .card p { margin: 4px 0; color: #374151; }
-      .card strong { color: #111827; }
-      .seccion {
-        margin-bottom: 24px;
-      }
-      .seccion h3 { margin-bottom: 12px; color: #111827; }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      th, td {
-        padding: 12px 14px;
-        text-align: left;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      th { background: #f3f4f6; color: #111827; }
-      .alerta-item {
-        margin-bottom: 10px;
-        padding: 14px;
-        border-radius: 10px;
-        background: #fff7ed;
-        border: 1px solid #fcd9b6;
-      }
-      .alerta-item strong { display: inline-block; margin-bottom: 6px; }
-      .alerta-item span { display: inline-block; margin-left: 8px; color: #92400e; }
-      .sin-alertas { color: #4b5563; font-style: italic; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 24px 20px; }
+      .wrap { max-width: 860px; margin: 0 auto; }
+      .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+      h1 { font-size: 1.4em; color: #1a252f; }
+      a.volver { font-size: .85em; color: #666; text-decoration: none; border: 1px solid #ddd; padding: 5px 12px; border-radius: 5px; }
+      a.volver:hover { background: #f5f5f5; }
+      .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+      .card { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+      .card .val { font-size: 2em; font-weight: bold; color: #1a252f; }
+      .card .lbl { font-size: .82em; color: #888; margin-top: 2px; }
+      .card .sub { font-size: .78em; color: #aaa; margin-top: 4px; }
+      .alertas h2 { font-size: 1em; font-weight: bold; color: #1a252f; margin-bottom: 12px; }
+      .alerta { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: .9em; }
+      .ALTA   { background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; }
+      .MEDIA  { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+      .sin-alertas { color: #16a34a; font-size: .95em; padding: 12px; background: #f0fdf4; border-radius: 8px; }
+      .generado { font-size: .75em; color: #aaa; margin-top: 16px; text-align: right; }
+
   body
-    div.contenedor
-      div.header-panel
-        div
-          h1 Dashboard de Resumen
-          p.subtitulo Información consolidada de stock, clientes, proveedores y ventas
-        div
-          a.boton-accion(href="/") Volver al menú
-          a.boton-accion(href="/logout") Salir
+    div.wrap
+      div.top
+        h1 📊 Dashboard Resumen
+        a.volver(href="/") ← Volver al panel
 
-      div.grid
+      div.cards
         div.card
-          h2 Proveedores
-          p Total: #{resumen.proveedores.total}
-          p Activos: #{resumen.proveedores.activos}
-          p Inactivos: #{resumen.proveedores.inactivos}
+          div.val= datos.proveedores.activos
+          div.lbl Proveedores activos
+          div.sub= datos.proveedores.inactivos + ' inactivos'
         div.card
-          h2 Productos
-          p Total: #{resumen.productos.total}
-          p Activos: #{resumen.productos.activos}
-          p Sin stock: #{resumen.productos.sinStock}
-          p Stock mínimo: #{resumen.productos.enStockMinimo}
+          div.val= datos.productos.activos
+          div.lbl Productos activos
+          div.sub= datos.productos.sinStock + ' sin stock · ' + datos.productos.enStockMinimo + ' en mínimo'
         div.card
-          h2 Clientes
-          p Total: #{resumen.clientes.total}
-          p Activos: #{resumen.clientes.activos}
-          p Deuda total: $#{resumen.clientes.deudaTotalCartera}
+          div.val= '$' + datos.clientes.deudaTotalCartera.toLocaleString()
+          div.lbl Deuda total cartera
+          div.sub= datos.clientes.conDeudaAlta + ' clientes con deuda alta'
+        div.card
+          div.val= datos.ventas.hoy
+          div.lbl Ventas hoy
+          div.sub= '$' + datos.ventas.totalHoy.toLocaleString() + ' facturado hoy'
 
-      div.grid
-        div.card
-          h2 Ventas
-          p Total ventas: #{resumen.ventas.total}
-          p Confirmadas: #{resumen.ventas.confirmadas}
-          p Canceladas: #{resumen.ventas.canceladas}
-          p Hoy: #{resumen.ventas.hoy}
-        div.card
-          h2 Montos
-          p Total facturado: $#{resumen.ventas.totalVentas}
-          p Facturado hoy: $#{resumen.ventas.totalHoy}
-          p Generado en: #{resumen.generadoEn}
-        div.card
-          h2 Alertas
-          p Total: #{resumen.alertas.total}
-          if resumen.alertas.total === 0
-            p.sin-alertas Sin alertas activas
-          else
-            each alerta in resumen.alertas.items
-              div.alerta-item
-                strong #{alerta.urgencia}
-                span #{alerta.tipo}
-                p #{alerta.mensaje}
-
-      div.seccion
-        h3 Detalle de alertas
-        if resumen.alertas.total > 0
-          table
-            thead
-              tr
-                th Tipo
-                th Urgencia
-                th Mensaje
-            tbody
-              each alerta in resumen.alertas.items
-                tr
-                  td #{alerta.tipo}
-                  td #{alerta.urgencia}
-                  td #{alerta.mensaje}
+      div.alertas
+        h2 Alertas activas (#{datos.alertas.total})
+        if datos.alertas.total === 0
+          p.sin-alertas ✅ Sin alertas activas — el sistema está operando con normalidad.
         else
-          p.sin-alertas No hay alertas pendientes.
+          each alerta in datos.alertas.items
+            div(class="alerta " + alerta.urgencia)
+              span= alerta.urgencia === 'ALTA' ? '🔴' : '🟡'
+              span #{alerta.tipo} — #{alerta.mensaje}
+
+      p.generado Generado: #{new Date(datos.generadoEn).toLocaleString('es-AR')}

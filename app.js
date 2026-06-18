@@ -1,89 +1,90 @@
 // ─── app.js ───────────────────────────────────────────────────────────────────
+import 'dotenv/config';
 import express from 'express';
 
-// --- IMPORTACIÓN DE RUTAS API ---
+// Rutas API
 import productosRoutes   from './src/routes/productos.routes.js';
 import proveedoresRoutes from './src/routes/proveedores.routes.js';
 import clientesRoutes    from './src/routes/clientes.routes.js';
 import ventasRoutes      from './src/routes/ventas.routes.js';
 import resumenRoutes     from './src/routes/resumen.routes.js';
 import auditoriaRoutes   from './src/routes/auditoria.routes.js';
-import resumenController from './src/controllers/resumen.controller.js';
 
-// --- IMPORTACIÓN DE MIDDLEWARES ---
+// Middlewares
 import { registrarPeticion } from './src/middlewares/logger.middleware.js';
 import validarJson           from './src/middlewares/validarJson.middleware.js';
-// NUEVO: middleware de autenticación con cookie simple
-import { verificarLogin, procesarLogin, procesarLogout } from './src/middlewares/auth.middleware.js';
+import {
+  verificarLogin, soloAdmin,
+  procesarLogin,  procesarLogout
+} from './src/middlewares/auth.middleware.js';
 
-// --- IMPORTACIÓN DE MODELOS (para vistas Pug) ---
+// Modelos para vistas Pug
 import ProductoModel  from './src/models/producto.model.js';
 import ProveedorModel from './src/models/proveedor.model.js';
 import ClienteModel   from './src/models/cliente.model.js';
 import VentaModel     from './src/models/venta.model.js';
+import resumenController from './src/controllers/resumen.controller.js';
 
 const app = express();
 
-// --- CONFIGURACIÓN DE PUG ---
+// Motor de vistas
 app.set('view engine', 'pug');
 app.set('views', './src/views');
 
-// --- MIDDLEWARES GLOBALES ---
-app.use(registrarPeticion);      // 1. Logger: registra cada request
-app.use(express.json());         // 2. Parseo de JSON en el body
-app.use(express.urlencoded({ extended: false })); // 3. Parseo de formularios HTML (POST de login)
-app.use(validarJson);            // 4. Captura JSON malformado
+// Middlewares globales
+app.use(registrarPeticion);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(validarJson);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// RUTAS PÚBLICAS (sin autenticación)
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Mostrar formulario de login
+// ── RUTAS PÚBLICAS ────────────────────────────────────────────────────────────
 app.get('/login', (req, res) => res.render('login'));
-
-// Procesar credenciales del formulario POST
-// verificarLogin NO se aplica aquí — es la ruta pública de autenticación
 app.post('/login', procesarLogin);
-
-// Cerrar sesión
 app.get('/logout', procesarLogout);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// RUTAS PROTEGIDAS DE VISTAS WEB (requieren login)
-// ─────────────────────────────────────────────────────────────────────────────
+// ── RUTAS WEB — ADMIN Y EMPLEADO ──────────────────────────────────────────────
 
+// Panel principal — muestra aviso si viene de acceso denegado
 app.get('/', verificarLogin, (req, res) => {
-  res.render('index');
+  const accesoDenegado = req.query.acceso === 'denegado';
+  res.render('index', { rol: req.rol, accesoDenegado });
 });
 
+// Productos — ambos roles pueden ver, solo admin puede modificar
 app.get('/productos', verificarLogin, async (req, res) => {
   const productos = await ProductoModel.obtenerTodos();
-  res.render('productos', { productos });
+  res.render('productos', { productos, rol: req.rol });
 });
 
-app.get('/proveedores', verificarLogin, async (req, res) => {
-  const proveedores = await ProveedorModel.obtenerTodos();
-  res.render('proveedores', { proveedores });
-});
-
+// Clientes — ambos roles pueden ver
 app.get('/clientes', verificarLogin, async (req, res) => {
   const clientes = await ClienteModel.obtenerTodos();
-  res.render('clientes', { clientes });
+  res.render('clientes', { clientes, rol: req.rol });
 });
 
+// Ventas — ambos roles pueden ver y registrar
 app.get('/ventas', verificarLogin, async (req, res) => {
   const ventas = await VentaModel.obtenerTodos();
-  res.render('ventas', { ventas });
+  res.render('ventas', { ventas, rol: req.rol });
 });
 
-app.get('/resumen', verificarLogin, async (req, res) => {
-  const resumen = await resumenController.calcularResumen();
-  res.render('resumen', { resumen });
+// ── RUTAS WEB — SOLO ADMIN ────────────────────────────────────────────────────
+app.get('/proveedores', soloAdmin, async (req, res) => {
+  const proveedores = await ProveedorModel.obtenerTodos();
+  res.render('proveedores', { proveedores, rol: req.rol });
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// RUTAS DE LA API JSON (sin autenticación — se prueban con Postman)
-// ─────────────────────────────────────────────────────────────────────────────
+app.get('/resumen', soloAdmin, async (req, res) => {
+  // Reutilizamos la lógica del controller y pasamos los datos a Pug
+  const datos = await resumenController.calcularResumen();
+  res.render('resumen', { datos, rol: req.rol });
+});
+
+app.get('/auditoria', soloAdmin, async (req, res) => {
+  res.render('auditoria', { rol: req.rol });
+});
+
+// ── RUTAS API (sin autenticación — para Postman) ──────────────────────────────
 app.use('/api/productos',   productosRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/clientes',    clientesRoutes);
@@ -91,7 +92,7 @@ app.use('/api/ventas',      ventasRoutes);
 app.use('/api/resumen',     resumenRoutes);
 app.use('/api/auditoria',   auditoriaRoutes);
 
-// --- 404 HANDLER ---
+// 404
 app.use((req, res) => {
   res.status(404).json({ error: `Ruta ${req.originalUrl} no encontrada` });
 });

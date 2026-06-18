@@ -2,55 +2,72 @@ doctype html
 html(lang="es")
   head
     meta(charset="UTF-8")
-    title Productos - TodoStock S.A.
+    title TodoStock — Productos
     style.
-      body { 
-        font-family: Arial, sans-serif; 
-        background-color: #f4f4f9; 
-        margin: 0; 
-        padding: 40px 20px; 
-      }
-      .contenedor { 
-        background: white; 
-        padding: 30px; 
-        border-radius: 10px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        max-width: 800px; 
-        margin: 0 auto; 
-      }
-      h1 { color: #333; text-align: center; margin-bottom: 20px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-      th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-      th { background-color: #2c3e50; color: white; }
-      .btn-volver { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #2c3e50; font-weight: bold; }
-      .btn-volver:hover { text-decoration: underline; }
-      .stock-bajo { color: #dc3545; font-weight: bold; }
-      .stock-ok { color: #28a745; font-weight: bold; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 24px 20px; }
+      .wrap { max-width: 900px; margin: 0 auto; }
+      .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+      h1 { font-size: 1.4em; color: #1a252f; }
+      .acciones { display: flex; gap: 8px; }
+      a.volver { font-size: .85em; color: #666; text-decoration: none; border: 1px solid #ddd; padding: 5px 12px; border-radius: 5px; }
+      a.btn-nuevo { font-size: .85em; color: white; background: #1a252f; text-decoration: none; padding: 6px 14px; border-radius: 5px; font-weight: bold; }
+      table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+      th { background: #1a252f; color: white; padding: 12px 14px; text-align: left; font-size: .85em; }
+      td { padding: 11px 14px; border-bottom: 1px solid #f0f0f0; font-size: .9em; }
+      tr:last-child td { border-bottom: none; }
+      tr:hover td { background: #fafafa; }
+      .badge { font-size: .75em; padding: 3px 8px; border-radius: 99px; font-weight: 600; }
+      .ok     { background: #dcfce7; color: #16a34a; }
+      .warn   { background: #fef9c3; color: #854d0e; }
+      .danger { background: #fef2f2; color: #991b1b; }
+      .inactivo { background: #f3f4f6; color: #6b7280; }
+      .btn-sm { font-size: .78em; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; background: white; }
+      .btn-del { color: #dc2626; border-color: #fca5a5; }
+      .solo-lectura { font-size: .8em; color: #aaa; font-style: italic; }
 
   body
-    div.contenedor
-      a.btn-volver(href="/") ← Volver al Panel Principal
-      h1 Inventario de Productos
-      
+    div.wrap
+      div.top
+        h1 📦 Productos
+        div.acciones
+          if rol === 'admin'
+            a.btn-nuevo(href="/productos/nuevo") + Nuevo producto
+          a.volver(href="/") ← Volver
+
       table
         thead
           tr
-            th ID
             th Nombre
             th Precio
-            th Stock Actual
+            th Stock
+            th Stock Mín.
             th Proveedor
+            th Estado
+            if rol === 'admin'
+              th Acciones
+
         tbody
-          each producto in productos
+          each p in productos
             tr
-              td= producto.id
-              td= producto.nombre
-              td= "$" + producto.precio
-              
-              //- Lógica de stock con colores
-              if producto.stock <= producto.stockMinimo
-                td.stock-bajo #{producto.stock} (¡Reponer!)
-              else
-                td.stock-ok #{producto.stock}
-                
-              td= producto.proveedorNombre
+              td= p.nombre
+              td= '$' + p.precio.toLocaleString()
+              td
+                if p.stock <= 0
+                  span.badge.danger SIN STOCK (#{p.stock})
+                else if p.stock <= p.stockMinimo
+                  span.badge.warn ⚠ #{p.stock}
+                else
+                  span.badge.ok ✓ #{p.stock}
+              td= p.stockMinimo
+              td= p.proveedorId?.razonSocial || '—'
+              td
+                if p.activo
+                  span.badge.ok Activo
+                else
+                  span.badge.inactivo Inactivo
+              if rol === 'admin'
+                td
+                  a.btn-sm(href="/productos/" + p._id + "/editar") Editar
+                  |  
+                  button.btn-sm.btn-del Eliminar
