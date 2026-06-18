@@ -31,8 +31,8 @@ html(lang="es")
           each proveedor in proveedores
             tr
               td= proveedor.id
-              td= proveedor.nombre
-              td= proveedor.contacto
+              td= proveedor.razonSocial
+              td= proveedor.email
               td= proveedor.telefono
               td
                 if proveedor.activo
