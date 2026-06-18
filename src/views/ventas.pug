@@ -21,7 +21,6 @@ html(lang="es")
       .confirmada { background: #dcfce7; color: #16a34a; }
       .cancelada  { background: #fef2f2; color: #991b1b; }
       .btn-sm { font-size: .78em; padding: 3px 8px; border-radius: 4px; border: 1px solid #fca5a5; cursor: pointer; background: white; color: #dc2626; }
-
   body
     div.wrap
       div.top
@@ -29,9 +28,9 @@ html(lang="es")
         a.volver(href="/") ← Volver
 
       if rol === 'admin'
-        p.info-rol.info-admin 👑 Administrador — podés ver, registrar y cancelar ventas. Usá Postman para crear ventas con validación completa.
+        p.info-rol.info-admin 👑 Administrador — podés ver, registrar y cancelar ventas vía Postman.
       else
-        p.info-rol.info-emp 👤 Empleado — podés ver el historial. Para registrar ventas usá la colección Postman disponible en tools/.
+        p.info-rol.info-emp 👤 Empleado — podés ver el historial. Para registrar ventas usá la colección Postman en tools/.
 
       table
         thead
@@ -44,20 +43,21 @@ html(lang="es")
             th Items
             if rol === 'admin'
               th Acciones
-
         tbody
           if ventas.length === 0
             tr
               td(colspan="7" style="text-align:center;color:#aaa;padding:24px") No hay ventas registradas aún.
           else
             each v in ventas
+              - var cliente = v.clienteId ? v.clienteId.razonSocial : '—'
+              - var fecha = new Date(v.createdAt).toLocaleDateString('es-AR')
               tr
-                td= v.clienteId?.razonSocial || '—'
+                td= cliente
                 td= v.modalidad
                 td= '$' + v.total.toLocaleString()
                 td
                   span(class="badge " + v.estado)= v.estado
-                td= new Date(v.createdAt).toLocaleDateString('es-AR')
+                td= fecha
                 td= v.items.length + ' producto(s)'
                 if rol === 'admin'
                   td

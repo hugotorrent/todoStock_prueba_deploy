@@ -24,8 +24,6 @@ html(lang="es")
       .inactivo { background: #f3f4f6; color: #6b7280; }
       .btn-sm { font-size: .78em; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; background: white; }
       .btn-del { color: #dc2626; border-color: #fca5a5; }
-      .solo-lectura { font-size: .8em; color: #aaa; font-style: italic; }
-
   body
     div.wrap
       div.top
@@ -46,9 +44,9 @@ html(lang="es")
             th Estado
             if rol === 'admin'
               th Acciones
-
         tbody
           each p in productos
+            - var proveedor = p.proveedorId ? p.proveedorId.razonSocial : '—'
             tr
               td= p.nombre
               td= '$' + p.precio.toLocaleString()
@@ -60,7 +58,7 @@ html(lang="es")
                 else
                   span.badge.ok ✓ #{p.stock}
               td= p.stockMinimo
-              td= p.proveedorId?.razonSocial || '—'
+              td= proveedor
               td
                 if p.activo
                   span.badge.ok Activo

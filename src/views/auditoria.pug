@@ -1,0 +1,26 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    title TodoStock — Auditoría
+    style.
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 24px 20px; }
+      .wrap { max-width: 900px; margin: 0 auto; }
+      .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+      h1 { font-size: 1.4em; color: #1a252f; }
+      a.volver { font-size: .85em; color: #666; text-decoration: none; border: 1px solid #ddd; padding: 5px 12px; border-radius: 5px; }
+      .info { font-size: .85em; color: #444; margin-bottom: 16px; background: white; padding: 14px 16px; border-radius: 8px; border-left: 4px solid #1a252f; line-height: 1.6; }
+      a.api-link { color: #2563eb; font-family: monospace; font-size: .95em; }
+  body
+    div.wrap
+      div.top
+        h1 🗂 Auditoría
+        a.volver(href="/") ← Volver
+
+      div.info
+        p El log de auditoría registra todas las operaciones de escritura (POST, PUT, DELETE) con fecha, ruta, status y duración.
+        br
+        p Consultalo directamente en la API:
+        br
+        a.api-link(href="/api/auditoria" target="_blank") GET /api/auditoria ↗
