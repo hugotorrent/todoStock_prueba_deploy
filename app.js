@@ -42,6 +42,11 @@ app.get('/login', (req, res) => res.render('login'));
 app.post('/login', procesarLogin);
 app.get('/logout', procesarLogout);
 
+// -- endpoint para verificar si el usuario está logueado (usado por frontend)
+app.get('/api/me', verificarLogin, (req, res) => {
+  res.json({ rol: req.rol });
+});
+
 // ── RUTAS WEB — ADMIN Y EMPLEADO ──────────────────────────────────────────────
 
 // Panel principal — muestra aviso si viene de acceso denegado
@@ -83,6 +88,10 @@ app.get('/resumen', soloAdmin, async (req, res) => {
 app.get('/auditoria', soloAdmin, async (req, res) => {
   res.render('auditoria', { rol: req.rol });
 });
+
+
+// -- Servir archivos estáticos (CSS, JS) desde la carpeta 'public'
+app.use(express.static('public'));
 
 // ── RUTAS API (sin autenticación — para Postman) ──────────────────────────────
 app.use('/api/productos',   productosRoutes);
