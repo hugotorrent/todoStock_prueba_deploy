@@ -310,12 +310,10 @@ tbody tr:hover td {
 }
 .alerta-ALTA {
   background: #fef2f2;
-  border-left: 4px solid #ef4444;
   color: #991b1b;
 }
 .alerta-MEDIA {
   background: #fffbeb;
-  border-left: 4px solid #f59e0b;
   color: #92400e;
 }
 .sin-alertas {

@@ -19,10 +19,10 @@ import { registrarPeticion } from './src/middlewares/logger.middleware.js';
 import validarJson           from './src/middlewares/validarJson.middleware.js';
 import {
   verificarLogin, soloAdmin,
-  procesarLogin,  procesarLogout
+  procesarLogin,  procesarRefresh, procesarLogout
 } from './src/middlewares/auth.middleware.js';
 
-// Modelos para vistas Pug (login sigue siendo Pug)
+// Modelos para vistas Pug
 import ProveedorModel    from './src/models/proveedor.model.js';
 import ProductoModel     from './src/models/producto.model.js';
 import ClienteModel      from './src/models/cliente.model.js';
@@ -31,7 +31,7 @@ import resumenController from './src/controllers/resumen.controller.js';
 
 const app = express();
 
-// Motor de vistas Pug (solo para login)
+// Motor de vistas Pug (solo para el login)
 app.set('view engine', 'pug');
 app.set('views', './src/views');
 
@@ -41,8 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(validarJson);
 
-// ── ARCHIVOS ESTÁTICOS — carpeta public/ (frontend Vanilla JS) ────────────────
-// Express sirve index.html, style.css y app.js del cliente desde acá
+// ── ARCHIVOS ESTÁTICOS — frontend Vanilla JS ──────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── RUTAS PÚBLICAS ────────────────────────────────────────────────────────────
@@ -50,49 +49,45 @@ app.get('/login', (req, res) => res.render('login'));
 app.post('/login', procesarLogin);
 app.get('/logout', procesarLogout);
 
-// ── ENDPOINT /api/me — devuelve el rol de la cookie al frontend JS ────────────
+// ── JWT: renovar access token con el refresh token de la cookie ───────────────
+app.post('/api/refresh', procesarRefresh);
+
+// ── JWT: devolver el rol del token actual ─────────────────────────────────────
 app.get('/api/me', verificarLogin, (req, res) => {
   res.json({ rol: req.rol });
 });
 
-// ── RUTA PRINCIPAL — sirve el index.html del frontend Vanilla JS ──────────────
-// Ya no usa Pug — el frontend JS maneja toda la navegación del panel
+// ── PANEL PRINCIPAL — sirve el index.html del frontend Vanilla JS ─────────────
 app.get('/', verificarLogin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ── RUTAS PUG LEGACY — mantenidas por compatibilidad ─────────────────────────
-// Estas rutas siguen funcionando pero el frontend JS las reemplaza
+// ── RUTAS PUG LEGACY ─────────────────────────────────────────────────────────
 app.get('/productos', verificarLogin, async (req, res) => {
   const productos = await ProductoModel.obtenerTodos();
   res.render('productos', { productos, rol: req.rol });
 });
-
 app.get('/clientes', verificarLogin, async (req, res) => {
   const clientes = await ClienteModel.obtenerTodos();
   res.render('clientes', { clientes, rol: req.rol });
 });
-
 app.get('/ventas', verificarLogin, async (req, res) => {
   const ventas = await VentaModel.obtenerTodos();
   res.render('ventas', { ventas, rol: req.rol });
 });
-
 app.get('/proveedores', soloAdmin, async (req, res) => {
   const proveedores = await ProveedorModel.obtenerTodos();
   res.render('proveedores', { proveedores, rol: req.rol });
 });
-
 app.get('/resumen', soloAdmin, async (req, res) => {
   const datos = await resumenController.calcularResumen();
   res.render('resumen', { datos, rol: req.rol });
 });
-
 app.get('/auditoria', soloAdmin, async (req, res) => {
   res.render('auditoria', { rol: req.rol });
 });
 
-// ── RUTAS API (sin autenticación — para Postman) ──────────────────────────────
+// ── RUTAS API ─────────────────────────────────────────────────────────────────
 app.use('/api/productos',   productosRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/clientes',    clientesRoutes);

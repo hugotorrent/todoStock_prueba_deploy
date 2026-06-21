@@ -1,103 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TodoStock S.A.</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoStock S.A.</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-logo">TodoStock</span>
-      <span class="rol-badge" id="rol-badge"></span>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="#" class="nav-item active" data-seccion="ventas">
-        <span class="nav-icon">🧾</span> Ventas
-      </a>
-      <a href="#" class="nav-item" data-seccion="productos">
-        <span class="nav-icon">📦</span> Productos
-      </a>
-      <a href="#" class="nav-item" data-seccion="clientes">
-        <span class="nav-icon">👤</span> Clientes
-      </a>
-      <a href="#" class="nav-item admin-only" data-seccion="proveedores">
-        <span class="nav-icon">🏭</span> Proveedores
-      </a>
-      <a href="#" class="nav-item admin-only" data-seccion="resumen">
-        <span class="nav-icon">📊</span> Dashboard
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <h1 class="topbar-titulo" id="topbar-titulo">Ventas</h1>
-      <button class="btn-nuevo" id="btn-nuevo" style="display:none">+ Nuevo</button>
-    </div>
-
-    <!-- BUSCADOR -->
-    <div class="barra-busqueda" id="barra-busqueda" style="display:none">
-      <input type="text" id="input-busqueda" placeholder="Buscar..." oninput="filtrar()">
-      <select id="filtro-estado" onchange="filtrar()" style="display:none">
-        <option value="">Todos</option>
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
-    </div>
-
-    <!-- CONTENIDO -->
-    <div class="contenido" id="contenido">
-      <div class="spinner" id="spinner">Cargando...</div>
-    </div>
-
-  </main>
-
-  <!-- MODAL NUEVA VENTA -->
-  <div class="modal-overlay" id="modal-venta" style="display:none">
-    <div class="modal">
-      <div class="modal-head">
-        <h2>Registrar venta</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-venta')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-grupo">
-          <label>Cliente</label>
-          <select id="venta-cliente"></select>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-logo">TodoStock S.A.</span>
+            <span class="rol-badge" id="rol-badge"></span>
         </div>
-        <div class="form-grupo">
-          <label>Modalidad</label>
-          <select id="venta-modalidad">
-            <option value="contado">Contado</option>
-            <option value="cuenta_corriente">Cuenta corriente</option>
-          </select>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-seccion="ventas">Ventas</a>
+            <a href="#" class="nav-item" data-seccion="productos">Productos</a>
+            <a href="#" class="nav-item" data-seccion="clientes">Clientes</a>
+            <a href="#" class="nav-item admin-only" data-seccion="proveedores">Proveedores</a>
+            <a href="#" class="nav-item admin-only" data-seccion="resumen">Dashboard</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
         </div>
-        <div class="form-grupo">
-          <label>Productos</label>
-          <div id="venta-items"></div>
-          <button class="btn-agregar-item" onclick="agregarItem()">+ Agregar producto</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <h1 class="topbar-titulo" id="topbar-titulo">Ventas</h1>
+            <button class="btn-nuevo" id="btn-nuevo" style="display:none">+ Nuevo</button>
         </div>
-        <div class="venta-total" id="venta-total">Total: $0</div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-venta')">Cancelar</button>
-        <button class="btn-primario" onclick="crearVenta()">Confirmar venta</button>
-      </div>
+        <div class="barra-busqueda" id="barra-busqueda" style="display:none">
+            <input type="text" id="input-busqueda" placeholder="Buscar...">
+            <select id="filtro-estado" style="display:none">
+                <option value="">Todos</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
+        </div>
+        <div class="contenido" id="contenido">
+            <div class="spinner">Cargando...</div>
+        </div>
+    </main>
+
+    <!-- MODAL NUEVA VENTA -->
+    <div class="modal-overlay" id="modal-venta" style="display:none">
+        <div class="modal">
+            <div class="modal-head">
+                <h2>Registrar venta</h2>
+                <button class="modal-cerrar" onclick="cerrarModal('modal-venta')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grupo">
+                    <label>Cliente</label>
+                    <select id="venta-cliente"></select>
+                </div>
+                <div class="form-grupo">
+                    <label>Modalidad</label>
+                    <select id="venta-modalidad">
+                        <option value="contado">Contado</option>
+                        <option value="cuenta_corriente">Cuenta corriente</option>
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label>Productos</label>
+                    <div id="venta-items"></div>
+                    <button class="btn-agregar-item" onclick="agregarItem()">+ Agregar producto</button>
+                </div>
+                <div class="venta-total" id="venta-total">Total: $0</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secundario" onclick="cerrarModal('modal-venta')">Cancelar</button>
+                <button class="btn-primario" onclick="crearVenta()">Confirmar venta</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
 
-  <script src="app.js"></script>
+    <!-- Socket.io — se sirve automáticamente desde el servidor cuando socket.io está instalado -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>
