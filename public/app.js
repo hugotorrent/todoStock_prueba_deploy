@@ -153,6 +153,14 @@ async function cargarSeccion(seccion) {
       btnNuevo.style.display = 'block';
       btnNuevo.onclick = abrirModalVenta;
     }
+    if (seccion === 'proveedores' && rolActual === 'admin') {
+      btnNuevo.style.display = 'block';
+      btnNuevo.onclick = abrirModalProveedor;
+    }
+    if (seccion === 'productos' && rolActual === 'admin') {
+      btnNuevo.style.display = 'block';
+      btnNuevo.onclick = abrirModalProducto;
+    }
 
     renderTabla(datosActuales, seccion);
   } catch (e) {
@@ -381,4 +389,113 @@ function mostrarToast(mensaje, tipo = 'ok') {
   toast.textContent = mensaje;
   toast.className   = `toast ${tipo} show`;
   setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ── NUEVO PROVEEDOR ───────────────────────────────────────────────────────────
+
+function abrirModalProveedor() {
+  // Limpiar campos
+  ['prov-razonSocial','prov-cuit','prov-telefono','prov-email']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modal-proveedor').style.display = 'flex';
+}
+
+async function guardarProveedor() {
+  const razonSocial = document.getElementById('prov-razonSocial').value.trim();
+  const cuit        = document.getElementById('prov-cuit').value.trim();
+  const telefono    = document.getElementById('prov-telefono').value.trim();
+  const email       = document.getElementById('prov-email').value.trim();
+
+  if (!razonSocial || !cuit) {
+    mostrarToast('Razón Social y CUIT son obligatorios', 'error');
+    return;
+  }
+
+  try {
+    const res  = await fetchAuth('/api/proveedores', {
+      method: 'POST',
+      body: JSON.stringify({ razonSocial, cuit, telefono, email }),
+    });
+    if (!res) return;
+    const data = await res.json();
+
+    if (!res.ok) {
+      mostrarToast(data.error || 'Error al guardar el proveedor', 'error');
+      return;
+    }
+
+    cerrarModal('modal-proveedor');
+    mostrarToast(`Proveedor "${razonSocial}" guardado correctamente`, 'ok');
+    cargarSeccion('proveedores'); // recargar la tabla
+  } catch (e) {
+    mostrarToast('Error de red: ' + e.message, 'error');
+  }
+}
+
+// ── NUEVO PRODUCTO ────────────────────────────────────────────────────────────
+
+async function abrirModalProducto() {
+  // Cargar proveedores activos para el select
+  try {
+    const res        = await fetchAuth('/api/proveedores');
+    const proveedores= await res.json();
+    const activos    = proveedores.filter(p => p.activo);
+
+    if (!activos.length) {
+      mostrarToast('No hay proveedores activos. Creá uno primero.', 'warn');
+      return;
+    }
+
+    document.getElementById('prod-proveedorId').innerHTML = activos
+      .map(p => `<option value="${p._id}">${p.razonSocial}</option>`)
+      .join('');
+  } catch (e) {
+    mostrarToast('Error al cargar proveedores: ' + e.message, 'error');
+    return;
+  }
+
+  // Limpiar campos
+  ['prod-nombre','prod-precio','prod-stock','prod-stockMinimo','prod-stockMaximo','prod-descripcion']
+    .forEach(id => document.getElementById(id).value = '');
+
+  document.getElementById('modal-producto').style.display = 'flex';
+}
+
+async function guardarProducto() {
+  const nombre      = document.getElementById('prod-nombre').value.trim();
+  const proveedorId = document.getElementById('prod-proveedorId').value;
+  const precio      = parseFloat(document.getElementById('prod-precio').value);
+  const stock       = parseInt(document.getElementById('prod-stock').value)       || 0;
+  const stockMinimo = parseInt(document.getElementById('prod-stockMinimo').value) || 0;
+  const stockMaximo = parseInt(document.getElementById('prod-stockMaximo').value) || 0;
+  const descripcion = document.getElementById('prod-descripcion').value.trim();
+
+  if (!nombre || !proveedorId || isNaN(precio)) {
+    mostrarToast('Nombre, proveedor y precio son obligatorios', 'error');
+    return;
+  }
+  if (precio < 0) {
+    mostrarToast('El precio no puede ser negativo', 'error');
+    return;
+  }
+
+  try {
+    const res  = await fetchAuth('/api/productos', {
+      method: 'POST',
+      body: JSON.stringify({ nombre, proveedorId, precio, stock, stockMinimo, stockMaximo, descripcion }),
+    });
+    if (!res) return;
+    const data = await res.json();
+
+    if (!res.ok) {
+      mostrarToast(data.error || 'Error al guardar el producto', 'error');
+      return;
+    }
+
+    cerrarModal('modal-producto');
+    mostrarToast(`Producto "${nombre}" guardado correctamente`, 'ok');
+    cargarSeccion('productos'); // recargar la tabla
+  } catch (e) {
+    mostrarToast('Error de red: ' + e.message, 'error');
+  }
 }
