@@ -133,6 +133,7 @@ async function cargarSeccion(seccion) {
 
   contenido.innerHTML    = '<div class="spinner">Cargando...</div>';
   btnNuevo.style.display = 'none';
+  btnNuevo.textContent = '+ Nuevo'; // resetear texto
   barraBusqueda.style.display = 'none';
   filtroEstado.style.display  = 'none';
   document.getElementById('input-busqueda').value = '';
@@ -160,6 +161,18 @@ async function cargarSeccion(seccion) {
     if (seccion === 'productos' && rolActual === 'admin') {
       btnNuevo.style.display = 'block';
       btnNuevo.onclick = abrirModalProducto;
+    }
+    // Empleado puede agregar productos al inventario (actualizar stock)
+    if (seccion === 'productos' && rolActual === 'empleado') {
+      btnNuevo.style.display = 'block';
+      btnNuevo.textContent = '+ Agregar al inventario';
+      btnNuevo.onclick = abrirModalAgregarStock;
+    }
+    // Admin puede agregar clientes
+    if (seccion === 'clientes' && rolActual === 'admin') {
+      btnNuevo.style.display = 'block';
+      btnNuevo.textContent = '+ Nuevo cliente';
+      btnNuevo.onclick = abrirModalCliente;
     }
 
     renderTabla(datosActuales, seccion);
@@ -495,6 +508,94 @@ async function guardarProducto() {
     cerrarModal('modal-producto');
     mostrarToast(`Producto "${nombre}" guardado correctamente`, 'ok');
     cargarSeccion('productos'); // recargar la tabla
+  } catch (e) {
+    mostrarToast('Error de red: ' + e.message, 'error');
+  }
+}
+
+// ── NUEVO CLIENTE (admin) ─────────────────────────────────────────────────────
+
+function abrirModalCliente() {
+  ['cli-razonSocial','cli-cuit','cli-telefono','cli-email','cli-limiteCrediticio']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('cli-condicionIva').value = 'consumidor_final';
+  document.getElementById('modal-cliente').style.display = 'flex';
+}
+
+async function guardarCliente() {
+  const razonSocial       = document.getElementById('cli-razonSocial').value.trim();
+  const cuit              = document.getElementById('cli-cuit').value.trim();
+  const condicionIva      = document.getElementById('cli-condicionIva').value;
+  const telefono          = document.getElementById('cli-telefono').value.trim();
+  const email             = document.getElementById('cli-email').value.trim();
+  const limiteCrediticio  = parseFloat(document.getElementById('cli-limiteCrediticio').value) || 0;
+
+  if (!razonSocial || !cuit) {
+    mostrarToast('Razón Social y CUIT son obligatorios', 'error');
+    return;
+  }
+
+  try {
+    const res  = await fetchAuth('/api/clientes', {
+      method: 'POST',
+      body: JSON.stringify({ razonSocial, cuit, condicionIva, telefono, email, limiteCrediticio }),
+    });
+    if (!res) return;
+    const data = await res.json();
+    if (!res.ok) { mostrarToast(data.error || 'Error al guardar el cliente', 'error'); return; }
+    cerrarModal('modal-cliente');
+    mostrarToast(`Cliente "${razonSocial}" guardado correctamente`, 'ok');
+    cargarSeccion('clientes');
+  } catch (e) {
+    mostrarToast('Error de red: ' + e.message, 'error');
+  }
+}
+
+// ── AGREGAR STOCK — empleado puede sumar unidades al inventario ───────────────
+
+async function abrirModalAgregarStock() {
+  try {
+    const res      = await fetchAuth('/api/productos');
+    const prods    = await res.json();
+    const activos  = prods.filter(p => p.activo);
+
+    document.getElementById('stock-productoId').innerHTML = activos
+      .map(p => `<option value="${p._id}">${p.nombre} (stock actual: ${p.stock})</option>`)
+      .join('');
+  } catch (e) {
+    mostrarToast('Error al cargar productos: ' + e.message, 'error');
+    return;
+  }
+  document.getElementById('stock-cantidad').value = '';
+  document.getElementById('modal-stock').style.display = 'flex';
+}
+
+async function guardarStock() {
+  const productoId = document.getElementById('stock-productoId').value;
+  const cantidad   = parseInt(document.getElementById('stock-cantidad').value);
+
+  if (!cantidad || cantidad <= 0) {
+    mostrarToast('Ingresá una cantidad válida mayor a 0', 'error');
+    return;
+  }
+
+  try {
+    // Obtener el producto actual para sumar el stock
+    const resGet  = await fetchAuth(`/api/productos/${productoId}`);
+    const producto = await resGet.json();
+    const nuevoStock = producto.stock + cantidad;
+
+    const res  = await fetchAuth(`/api/productos/${productoId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ stock: nuevoStock }),
+    });
+    if (!res) return;
+    const data = await res.json();
+    if (!res.ok) { mostrarToast(data.error || 'Error al actualizar el stock', 'error'); return; }
+
+    cerrarModal('modal-stock');
+    mostrarToast(`Stock actualizado — ${producto.nombre}: ${producto.stock} → ${nuevoStock}`, 'ok');
+    cargarSeccion('productos');
   } catch (e) {
     mostrarToast('Error de red: ' + e.message, 'error');
   }

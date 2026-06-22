@@ -160,6 +160,78 @@
     </div>
   </div>
 
+
+  <!-- MODAL NUEVO CLIENTE -->
+  <div class="modal-overlay" id="modal-cliente" style="display:none">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Nuevo cliente</h2>
+        <button class="modal-cerrar" onclick="cerrarModal('modal-cliente')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grupo">
+          <label>Razón Social *</label>
+          <input type="text" id="cli-razonSocial" placeholder="Ej: Almacén Don Pepe">
+        </div>
+        <div class="form-grupo">
+          <label>CUIT *</label>
+          <input type="text" id="cli-cuit" placeholder="20-12345678-9">
+        </div>
+        <div class="form-grupo">
+          <label>Condición IVA *</label>
+          <select id="cli-condicionIva">
+            <option value="consumidor_final">Consumidor Final</option>
+            <option value="responsable_inscripto">Responsable Inscripto</option>
+            <option value="monotributista">Monotributista</option>
+            <option value="exento">Exento</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-grupo">
+            <label>Teléfono</label>
+            <input type="text" id="cli-telefono" placeholder="11-3333-4444">
+          </div>
+          <div class="form-grupo">
+            <label>Email</label>
+            <input type="text" id="cli-email" placeholder="cliente@mail.com">
+          </div>
+        </div>
+        <div class="form-grupo">
+          <label>Límite crediticio</label>
+          <input type="number" id="cli-limiteCrediticio" placeholder="50000" min="0">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secundario" onclick="cerrarModal('modal-cliente')">Cancelar</button>
+        <button class="btn-primario" onclick="guardarCliente()">Guardar cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL AGREGAR STOCK (empleado) -->
+  <div class="modal-overlay" id="modal-stock" style="display:none">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Agregar al inventario</h2>
+        <button class="modal-cerrar" onclick="cerrarModal('modal-stock')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grupo">
+          <label>Producto *</label>
+          <select id="stock-productoId"></select>
+        </div>
+        <div class="form-grupo">
+          <label>Cantidad a agregar *</label>
+          <input type="number" id="stock-cantidad" placeholder="Ej: 50" min="1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secundario" onclick="cerrarModal('modal-stock')">Cancelar</button>
+        <button class="btn-primario" onclick="guardarStock()">Confirmar ingreso</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
