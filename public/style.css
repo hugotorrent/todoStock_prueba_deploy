@@ -352,6 +352,13 @@ tbody tr:hover td { background: #fafafa; }
   background: var(--white);
   font-size: .88rem;
 }
+/* Asegurar que los inputs ocupen el ancho de su columna y no provoquen overflow */
+.form-grupo input,
+.form-grupo select {
+  width: 100%;
+  min-width: 0; /* permite que el grid reduzca la columna sin overflow */
+  box-sizing: border-box;
+}
 .form-grupo input:focus,
 .form-grupo select:focus { border-color: #9ca3af; }
 .item-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
