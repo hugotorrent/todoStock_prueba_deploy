@@ -200,6 +200,6 @@ export async function guardarStock() {
   }
 }
 
-function cerrarModal(id) {
+export function cerrarModal(id) {
   document.getElementById(id).style.display = 'none';
 }
