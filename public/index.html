@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TodoStock S.A.</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -22,7 +25,7 @@
       <a href="#" class="nav-item admin-only" data-seccion="resumen">Dashboard</a>
     </nav>
     <div class="sidebar-footer">
-      <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+      <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
     </div>
   </aside>
 
@@ -50,7 +53,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>Registrar venta</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-venta')">✕</button>
+        <button class="modal-cerrar modal-close" data-target="modal-venta">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grupo">
@@ -67,13 +70,13 @@
         <div class="form-grupo">
           <label>Productos</label>
           <div id="venta-items"></div>
-          <button class="btn-agregar-item" onclick="agregarItem()">+ Agregar producto</button>
+          <button class="btn-agregar-item" id="btn-agregar-item">+ Agregar producto</button>
         </div>
         <div class="venta-total" id="venta-total">Total: $0</div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-venta')">Cancelar</button>
-        <button class="btn-primario" onclick="crearVenta()">Confirmar venta</button>
+        <button class="btn-secundario modal-close" data-target="modal-venta">Cancelar</button>
+        <button class="btn-primario" id="btn-confirmar-venta">Confirmar venta</button>
       </div>
     </div>
   </div>
@@ -83,7 +86,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>Nuevo proveedor</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-proveedor')">✕</button>
+        <button class="modal-cerrar modal-close" data-target="modal-proveedor">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grupo">
@@ -106,8 +109,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-proveedor')">Cancelar</button>
-        <button class="btn-primario" onclick="guardarProveedor()">Guardar proveedor</button>
+        <button class="btn-secundario modal-close" data-target="modal-proveedor">Cancelar</button>
+        <button class="btn-primario" id="btn-guardar-proveedor">Guardar proveedor</button>
       </div>
     </div>
   </div>
@@ -117,7 +120,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>Nuevo producto</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-producto')">✕</button>
+        <button class="modal-cerrar modal-close" data-target="modal-producto">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grupo">
@@ -154,8 +157,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-producto')">Cancelar</button>
-        <button class="btn-primario" onclick="guardarProducto()">Guardar producto</button>
+        <button class="btn-secundario modal-close" data-target="modal-producto">Cancelar</button>
+        <button class="btn-primario" id="btn-guardar-producto">Guardar producto</button>
       </div>
     </div>
   </div>
@@ -166,7 +169,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>Nuevo cliente</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-cliente')">✕</button>
+        <button class="modal-cerrar modal-close" data-target="modal-cliente">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grupo">
@@ -202,8 +205,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-cliente')">Cancelar</button>
-        <button class="btn-primario" onclick="guardarCliente()">Guardar cliente</button>
+        <button class="btn-secundario modal-close" data-target="modal-cliente">Cancelar</button>
+        <button class="btn-primario" id="btn-guardar-cliente">Guardar cliente</button>
       </div>
     </div>
   </div>
@@ -213,7 +216,7 @@
     <div class="modal">
       <div class="modal-head">
         <h2>Agregar al inventario</h2>
-        <button class="modal-cerrar" onclick="cerrarModal('modal-stock')">✕</button>
+        <button class="modal-cerrar modal-close" data-target="modal-stock">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-grupo">
@@ -226,8 +229,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secundario" onclick="cerrarModal('modal-stock')">Cancelar</button>
-        <button class="btn-primario" onclick="guardarStock()">Confirmar ingreso</button>
+        <button class="btn-secundario modal-close" data-target="modal-stock">Cancelar</button>
+        <button class="btn-primario" id="btn-guardar-stock">Confirmar ingreso</button>
       </div>
     </div>
   </div>
@@ -236,6 +239,6 @@
   <div class="toast" id="toast"></div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="app.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
